@@ -2,16 +2,16 @@
 
 const opentelemetry = require('@opentelemetry/api');
 const { BasicTracerProvider, ConsoleSpanExporter, SimpleSpanProcessor } = require('@opentelemetry/sdk-trace-base');
-const { OTLPTraceExporter } = require('@opentelemetry/exporter-trace-otlp-http');
+const { OTLPTraceExporter } = require('@opentelemetry/exporter-trace-otlp-grpc');
 const { Resource } = require('@opentelemetry/resources');
 const { SemanticResourceAttributes } = require('@opentelemetry/semantic-conventions');
 // const { OTLPTraceExporter } = require('@opentelemetry/exporter-otlp-grpc');
 // const { OTLPTraceExporter } = require('@opentelemetry/exporter-otlp-proto');
 
-// opentelemetry.diag.setLogger(
-//   new opentelemetry.DiagConsoleLogger(),
-//   opentelemetry.DiagLogLevel.DEBUG,
-// );
+opentelemetry.diag.setLogger(
+  new opentelemetry.DiagConsoleLogger(),
+  opentelemetry.DiagLogLevel.DEBUG,
+);
 
 const exporter = new OTLPTraceExporter({
   // headers: {
@@ -64,6 +64,10 @@ function doWork(parent) {
       array: [1, 2, 'boom'],
     },
   ]);
+
+  span.setAttribute('test_attr', 100);
+  span.setAttribute('operation', "BLA");
+  span.setAttribute('status_code', "STATUS_CODE_UNSET");
 
   // Annotate our span to capture metadata about our operation
   span.addEvent('invoking doWork');
